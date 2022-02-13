@@ -3,7 +3,7 @@
 
 # 默认的环境变量
 # 默认按照年 月的方式存放
-GIT_ROOT=/renj.io/apps/jjbot/jjapps_status
+source ./jjbot_config.sh
 
 year=$(date +%Y)
 month=$(date +%m)
@@ -15,50 +15,50 @@ second_dir=$month
 data=''
 get_apps_status()
 {
-  :>status_${file_date}.txt
+  :>status_"${file_date}".txt
   apps=$(/renj.io/zeus/zeus.sh show)
   for app in $apps
   do
     # 暂时需要对nginx处理
     current_app=$(echo $app | grep -v \(*\) | grep -v \n)
-    if [ -z $current_app ];then
+    if [ -z "$current_app" ];then
       continue
     fi
-    data="$current_app: $(/renj.io/zeus/zeus.sh status $current_app)"
-    echo "${data}" >> status_${file_date}.txt
+    data="$current_app: $(/renj.io/zeus/zeus.sh status "$current_app")"
+    echo "${data}" >> status_"${file_date}".txt
   done
 }
 
 # 优先清空
-cd ${GIT_ROOT}
-if [ -d ${first_dir} ]
+cd "${GIT_ROOT}" || exit
+if [ -d "${first_dir}" ]
 then
-  cd ${first_dir}
-  if [ -d ${second_dir} ]
+  cd "${first_dir}" || exit
+  if [ -d "${second_dir}" ]
   then
-    cd ${second_dir}
+    cd "${second_dir}" || exit
     get_apps_status
   else
-    mkdir ${second_dir}
-    cd ${second_dir}
+    mkdir "${second_dir}"
+    cd "${second_dir}" || exit
     get_apps_status
   fi
 else
-  mkdir ${first_dir}
-  cd ${first_dir}
-  if [ -d ${second_dir} ]
+  mkdir "${first_dir}"
+  cd "${first_dir}" || exit
+  if [ -d "${second_dir}" ]
   then
-    cd ${second_dir}
+    cd "${second_dir}" || exit
     get_apps_status
   else
-    mkdir ${second_dir}
-    cd ${second_dir}
+    mkdir "${second_dir}"
+    cd "${second_dir}" || exit
     get_apps_status
   fi
 fi
 
 # start git
-cd ${GIT_ROOT}
+cd "${GIT_ROOT}" || exit
 git add .
-git commit -m "add status on ${file_date}"
+git commit -m "🤖JJBot add status on ${file_date}"
 git push origin
