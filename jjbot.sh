@@ -3,7 +3,7 @@
 
 # 默认的环境变量
 # 默认按照年 月的方式存放
-source ./jjbot_config.sh
+source $(dirname $0)/jjbot_config.sh
 
 year=$(date +%Y)
 month=$(date +%m)

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 检查git权限
 
-source ./jjbot_config.sh
+source $(dirname $0)/jjbot_config.sh
 # 检查密钥
 if [ ! -d "$HOME/.ssh" ];then
   echo "ssh密钥不存在"
